@@ -96,7 +96,8 @@ class ServiceProvider implements ServiceProviderInterface
                 'default_fallback' => $default
             ]);
 
-            return $result_lang;
+            $normalizer = new LanguageNormalizer;
+            return $normalizer($result_lang);
         };
 
 
