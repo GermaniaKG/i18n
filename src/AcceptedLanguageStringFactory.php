@@ -41,7 +41,7 @@ class AcceptedLanguageStringFactory
             return $this->default;
 
         elseif (!is_array( $header_value )
-        or !is_string( $header_value)):
+        and !is_string( $header_value)):
             $this->logger->notice( "Invalid Header value for accepted language, neither string nor array. Return default", [
                 'language' => $this->default
             ]);
