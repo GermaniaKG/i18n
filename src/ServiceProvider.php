@@ -89,7 +89,15 @@ class ServiceProvider implements ServiceProviderInterface
             $best_language = $negotiator->getBest($accepted_language, $available);
 
             $result_lang = $best_language ? $best_language->getType() : $default;
-            return $result_lang;
+            $logger->info("Language negotiation", [
+                'result' => $result_lang,
+                'accepted_language' => $accepted_language,
+                'available' => $available,
+                'default_fallback' => $default
+            ]);
+
+            $normalizer = new LanguageNormalizer;
+            return $normalizer($result_lang);
         };
 
 
