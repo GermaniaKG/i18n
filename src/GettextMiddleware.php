@@ -17,7 +17,7 @@ class GettextMiddleware
     /**
      * @var string
      */
-    public $client_lang;
+    public $locale;
 
     /**
      * @var array
@@ -41,14 +41,14 @@ class GettextMiddleware
 
 
     /**
-     * @param string               $client_lang Client language, e.g. "en_US"
+     * @param string               $locale      Client language, e.g. "en_US"
      * @param iterable             $domains     gettext domain catalogs
      * @param string               $path        Locales path where the "en_US/LC_MESSAGES" reside
      * @param LoggerInterface|null $logger      Optional PSR3-Logger
      */
-    public function __construct( string $client_lang, iterable $domains, string $path, LoggerInterface $logger = null)
+    public function __construct( string $locale, iterable $domains, string $path, LoggerInterface $logger = null)
     {
-        $this->setLocale($client_lang);
+        $this->setLocale($locale);
         $this->setDomains($domains);
         $this->setPath($path);
         $this->logger = $logger ?: new NullLogger;
@@ -66,8 +66,8 @@ class GettextMiddleware
         //
         // Instruct gettext which locale to use for this session.
         //
-        putenv("LANG=" . $this->client_lang);
-        setlocale(LC_ALL, $this->client_lang);
+        putenv("LANG=" . $this->locale);
+        setlocale(LC_ALL, $this->locale);
 
 
         // gettext:
@@ -89,7 +89,7 @@ class GettextMiddleware
 
 
         $this->logger->info("gettext configuration", [
-            'language' => $this->client_lang,
+            'language' => $this->locale,
             'domains' => $this->domains,
             'path' => $this->path,
             'charset' => $this->charset
@@ -105,7 +105,7 @@ class GettextMiddleware
      */
     public function setLocale( string $locale ) : self
     {
-        $this->client_lang = $locale;
+        $this->locale = $locale;
         return $this;
     }
 
