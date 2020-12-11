@@ -138,4 +138,14 @@ class GettextMiddleware
     }
 
 
+    /**
+     * @param string $charset
+     */
+    public function setCharset( string $charset ) : self
+    {
+        $this->charset = $charset;
+        return $this;
+    }
+
+
 }
