@@ -3,6 +3,8 @@ namespace Germania\i18n;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
@@ -11,7 +13,7 @@ use Psr\Log\NullLogger;
 /**
  * Application middleware
  */
-class GettextMiddleware
+class GettextMiddleware implements MiddlewareInterface
 {
 
     use LoggerAwareTrait;
@@ -57,13 +59,39 @@ class GettextMiddleware
     }
 
 
+
     /**
+     * PSR-15 Single Pass
+     *
+     * @param  ServerRequestInterface  $request Server request instance
+     * @param  RequestHandlerInterface $handler Request handler
+     * @return ResponseInterface
+     */
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    {
+      $this->setupGettext();
+      return $handler->handle($request);
+    }
+
+
+
+    /**
+     * PSR-7 Double Pass
+     *
      * @param  ServerRequestInterface $request  PSR-7 request object
      * @param  ResponseInterface      $response PSR-7 response object
      * @param  callable               $next     Next middleware
      * @return callable               $next     Next middleware return
      */
     public function __invoke (ServerRequestInterface $request, ResponseInterface $response, callable $next) {
+
+        $this->setupGettext();
+        return $next($request, $response);
+    }
+
+
+    public function setupGettext()
+    {
 
         //
         // Instruct gettext which locale to use for this session.
@@ -96,8 +124,6 @@ class GettextMiddleware
             'path' => $this->path,
             'charset' => $this->charset
         ]);
-
-        return $next($request, $response);
     }
 
 
