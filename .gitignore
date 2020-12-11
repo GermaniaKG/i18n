@@ -55,5 +55,11 @@ logs/*
 config.json
 .htaccess
 tests/build
+tests/logs
 build
 phpunit.xml
+phpdoc.xml
+
+
+
+

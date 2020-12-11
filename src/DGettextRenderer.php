@@ -5,18 +5,24 @@ namespace Germania\i18n;
 
 class DGettextRenderer {
 
+
     /**
+     * Domain name for dgettext
+     *
      * @var string
      */
     public $domain;
 
 
     /**
-     * @param string $domain
+     * @param string $domain gettext domain
      */
-    public function __construct( $domain )
+    public function __construct( string $domain )
     {
-        $this->domain = $domain;
+        $this->setDomain($domain);
+        $this->setFn( function( $domain, $msgid ) {
+            return dgettext( $domain, $msgid );
+        });
     }
 
 
@@ -25,7 +31,7 @@ class DGettextRenderer {
      * @param  array  $arguments String replacement array
      * @return string
      */
-    public function __invoke( $msgid, $arguments = array() )
+    public function __invoke( string $msgid, array $arguments = array() )
     {
         $result = dgettext( $this->domain, $msgid );
 
@@ -33,6 +39,27 @@ class DGettextRenderer {
             return $result;
         endif;
 
-        return str_replace(array_keys($arguments), array_values($arguments), $result);
+
+        $needles = array_map(function($needle) {
+            return '{' . $needle . '}';
+        }, array_keys($arguments));
+
+        return str_replace($needles, array_values($arguments), $result);
+    }
+
+
+    /**
+     * @param string $domain gettext domain
+     */
+    public function setDomain( string $domain ) : self
+    {
+        $this->domain = $domain;
+        return $this;
+    }
+
+    public function setFn( callable $fn ) : self
+    {
+        $this->dgettext = $fn;
+        return $this;
     }
 }
