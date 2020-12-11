@@ -91,7 +91,7 @@ class GettextMiddleware
 
 
         $this->logger->info("gettext configuration", [
-            'language' => $this->locale,
+            'locale' => $this->locale,
             'domains' => $this->domains,
             'path' => $this->path,
             'charset' => $this->charset
