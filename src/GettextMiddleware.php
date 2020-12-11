@@ -111,11 +111,13 @@ class GettextMiddleware
 
 
     /**
-     * @param string $path [description]
+     * @param string $path  Path to locales directory
+     *
+     * @throws  \RuntimeException if `$path` does not exist or is not readable
      */
     public function setPath( string $path ) : self
     {
-        if (!is_readable( $path )):
+        if (!is_dir($path) or !is_readable( $path )):
             throw new \RuntimeException("Not readable: " . $path);
         endif;
 
