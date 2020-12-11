@@ -17,27 +17,38 @@ class Translator {
 
 
     /**
-     * @param string $client_lang
-     * @param string $default_lang
+     * @param string $client_lang   Example: "de"
+     * @param string $default_lang  Example: "en"
      */
-    public function __construct( $client_lang, $default_lang )
+    public function __construct( string $client_lang, string $default_lang )
     {
-        $this->client_lang = $client_lang;
-        $this->default_lang = $default_lang;
+        $this->setLanguage($client_lang);
+        $this->setDefaultLanguage($default_lang);
     }
 
 
     /**
      * @param string $lang
      */
-    public function setLanguage( $lang )
+    public function setLanguage( string $lang ) : self
     {
         $this->client_lang = $lang;
+        return $this;
     }
 
 
     /**
-     * @return string $lang
+     * @param string $lang
+     */
+    public function setDefaultLanguage( string $lang ) : self
+    {
+        $this->default_lang = $lang;
+        return $this;
+    }
+
+
+    /**
+     * @return string
      */
     public function getLanguage(  )
     {
@@ -46,10 +57,21 @@ class Translator {
 
 
     /**
-     * @param  string[]|string $variable
-     * @param  string          $client_lang Optional: override for this time
+     * @return string
+     */
+    public function getDefaultLanguage(  )
+    {
+        return $this->default_lang;
+    }
+
+
+    /**
+     * @param  string[]|mixed  $variable     String or Array with language keys
+     * @param  string          $client_lang  Optional: override for this time
      *
      * @return mixed
+     *
+     * @throws \RuntimeException if $variable array does not contain neither client nor default language keys
      */
     public function __invoke( $variable, $client_lang = null )
     {
