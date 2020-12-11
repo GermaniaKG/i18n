@@ -38,10 +38,6 @@ class GettextMiddleware implements MiddlewareInterface
      */
     public $charset = 'UTF-8';
 
-    /**
-     * @var LoggerInterface
-     */
-    public $logger;
 
 
     /**
