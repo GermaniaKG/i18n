@@ -42,15 +42,15 @@ class GettextMiddleware
 
     /**
      * @param string               $client_lang Client language, e.g. "en_US"
-     * @param string               $domains     gettext domain catalogs
-     * @param string               $path        path to locales
+     * @param iterable             $domains     gettext domain catalogs
+     * @param string               $path        Locales path where the "en_US/LC_MESSAGES" reside
      * @param LoggerInterface|null $logger      Optional PSR3-Logger
      */
-    public function __construct( $client_lang, $domains, $path, LoggerInterface $logger = null)
+    public function __construct( string $client_lang, iterable $domains, string $path, LoggerInterface $logger = null)
     {
-        $this->client_lang = $client_lang;
-        $this->domains = $domains;
-        $this->path = $path;
+        $this->setLocale($client_lang);
+        $this->setDomains($domains);
+        $this->setPath($path);
         $this->logger = $logger ?: new NullLogger;
     }
 
@@ -63,35 +63,24 @@ class GettextMiddleware
      */
     public function __invoke (ServerRequestInterface $request, ResponseInterface $response, callable $next) {
 
-        // s.th. like "en_US"
-        //       en: language code, ISO 639-1
-        //       US: country code, ISO 3166-1 alpha-2 specification
-        $client_language = $this->client_lang;
-
-
         //
         // Instruct gettext which locale to use for this session.
         //
-        putenv("LANG=" . $client_language);
-        setlocale(LC_ALL, $client_language);
+        putenv("LANG=" . $this->client_lang);
+        setlocale(LC_ALL, $this->client_lang);
 
 
-        // gettext: The catalog file used to store.
-        // the translation messages (MO files) are called "domain".
-        $domains = $this->domains;
+        // gettext:
+        //   The catalog file used to store.
+        //   The translation messages (MO files) are called "domain".
 
         // bindtextdomain:
-        //   where to find the domain to use;
+        //   Where to find the domain to use;
         //   domain: catalog name without the .mo extension
         //   path:   parent directory in which the "en_US/LC_MESSAGES" resides
-        $path = $this->path;
 
-        if (!is_readable( $path )):
-            throw new \RuntimeException("Not readable: " . $path);
-        endif;
-
-        foreach($domains as $domain):
-            bindtextdomain($domain, $path);
+        foreach($this->domains as $domain):
+            bindtextdomain($domain, $this->path);
             bind_textdomain_codeset($domain, $this->charset );
         endforeach;
 
@@ -100,13 +89,48 @@ class GettextMiddleware
 
 
         $this->logger->info("gettext configuration", [
-            'language' => $client_language,
-            'domains' => $domains,
-            'path' => $path,
+            'language' => $this->client_lang,
+            'domains' => $this->domains,
+            'path' => $this->path,
             'charset' => $this->charset
         ]);
 
         return $next($request, $response);
+    }
+
+
+
+    /**
+     * @param string $locale Client locale string, e.g. `en_GB`
+     */
+    public function setLocale( string $locale ) : self
+    {
+        $this->client_lang = $locale;
+        return $this;
+    }
+
+
+    /**
+     * @param string $path [description]
+     */
+    public function setPath( string $path ) : self
+    {
+        if (!is_readable( $path )):
+            throw new \RuntimeException("Not readable: " . $path);
+        endif;
+
+        $this->path = $path;
+        return $this;
+    }
+
+
+    /**
+     * @param iterable $domains Domains
+     */
+    public function setDomains( iterable $domains ) : self
+    {
+        $this->domains = $domains;
+        return $this;
     }
 
 
