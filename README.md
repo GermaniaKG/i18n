@@ -16,6 +16,101 @@ $ composer require germania-kg/i18n
 ```
 
 
+
+## BC breaks from v1
+
+**DGettextRenderer:** This callable now expects returned messages to enclose placeholder with curly braces.
+
+
+
+## GettextMiddleware
+
+```php
+<?php
+use Germania\i18n\GettextMiddleware;
+
+$locale = "en_GB";
+$domains = ["app", "project"];
+$path = "./locales";
+
+$middleware = new GettextMiddleware($locale, $domains, $path);
+```
+
+
+
+## LanguageNormalizer
+
+```php
+<?php
+use Germania\i18n\LanguageNormalizer;
+
+$norm = new LanguageNormalizer;
+$norm("de-de"); // "de_DE"
+```
+
+
+
+## Translator
+
+The constructor requires a *client* and and *default* language.
+
+```php
+<?php
+use Germania\i18n\Translator;
+
+$t = new Translator("de", "en");
+
+echo $t("Just a string, nothing to translate");
+// "Just a string, nothing to translate"
+
+$var = array(
+  "de" => "Deutsch: Nur eine String-Variable",
+  "en" => "English: Just a string variable"
+);
+
+echo $t($var);
+// "Deutsch: Nur eine String-Variable"
+
+echo $t($var, "en");
+// "English: Just a string variable"
+```
+
+
+
+## DGettextRenderer
+
+Callable wrapper around dgettext for a given domain. Optionally expands at runtime variable placeholders given in second parameter:
+
+```php
+<?php
+use Germania\i18n\DGettextRenderer;
+
+$domain = "app";
+$dgr = new DGettextRenderer($domain);
+
+echo $dgr("MsgId");
+// "Some translated {placeholder} messages"
+
+echo $dgr("MsgId", [
+  "placeholder" => "success"
+]);
+// "Some translated success messages"
+```
+
+
+
+
+
+## Deprecated 
+
+These classes have been used in **v1**, developers are encouraged to not use them any longer.
+
+- `Germania\i18n\ServiceProvider`
+
+
+
+
+
 ## Issues
 
 See [full issues list.][i0]

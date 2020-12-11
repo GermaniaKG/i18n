@@ -57,3 +57,8 @@ config.json
 tests/build
 build
 phpunit.xml
+phpdoc.xml
+
+
+
+
