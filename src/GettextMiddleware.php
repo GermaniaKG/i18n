@@ -43,7 +43,7 @@ class GettextMiddleware
 
 
     /**
-     * @param string               $locale      Client language, e.g. "en_US"
+     * @param string               $locale      Default locale, e.g. "en_US"
      * @param iterable             $domains     gettext domain catalogs
      * @param string               $path        Locales path where the "en_US/LC_MESSAGES" reside
      * @param LoggerInterface|null $logger      Optional: PSR3-Logger
