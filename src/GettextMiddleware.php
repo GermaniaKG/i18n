@@ -4,6 +4,7 @@ namespace Germania\i18n;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
 
 
@@ -13,6 +14,7 @@ use Psr\Log\NullLogger;
 class GettextMiddleware
 {
 
+    use LoggerAwareTrait;
 
     /**
      * @var string
@@ -44,14 +46,14 @@ class GettextMiddleware
      * @param string               $locale      Client language, e.g. "en_US"
      * @param iterable             $domains     gettext domain catalogs
      * @param string               $path        Locales path where the "en_US/LC_MESSAGES" reside
-     * @param LoggerInterface|null $logger      Optional PSR3-Logger
+     * @param LoggerInterface|null $logger      Optional: PSR3-Logger
      */
     public function __construct( string $locale, iterable $domains, string $path, LoggerInterface $logger = null)
     {
         $this->setLocale($locale);
         $this->setDomains($domains);
         $this->setPath($path);
-        $this->logger = $logger ?: new NullLogger;
+        $this->setLogger($logger ?: new NullLogger);
     }
 
 
