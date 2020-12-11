@@ -19,7 +19,17 @@ $ composer require germania-kg/i18n
 
 ## BC breaks from v1
 
-**DGettextRenderer:** This callable now expects returned messages to enclose placeholder with curly braces.
+Class **DGettextRenderer:** 
+This callable now expects returned messages to enclose placeholders with curly braces.
+
+## Deprecated 
+
+These classes have been used in **v1**, developers are encouraged to not use them any longer.
+
+- `Germania\i18n\ServiceProvider`
+- `Germania\i18n\AcceptedLanguageStringFactory`
+
+
 
 
 
@@ -79,7 +89,7 @@ echo $t($var, "en");
 
 ## DGettextRenderer
 
-Callable wrapper around dgettext for a given domain. Optionally expands at runtime variable placeholders given in second parameter:
+Callable wrapper around *dgettext* for a given domain. Optionally expands at runtime variable placeholders given in second parameter:
 
 ```php
 <?php
@@ -96,16 +106,6 @@ echo $dgr("MsgId", [
 ]);
 // "Some translated success messages"
 ```
-
-
-
-
-
-## Deprecated 
-
-These classes have been used in **v1**, developers are encouraged to not use them any longer.
-
-- `Germania\i18n\ServiceProvider`
 
 
 
