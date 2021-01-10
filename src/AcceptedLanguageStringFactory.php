@@ -18,13 +18,6 @@ class AcceptedLanguageStringFactory
 
 
     /**
-     * @var LoggerInterface
-     */
-    public $logger;
-
-
-
-    /**
      * @var string Psr\Log\LogLevel
      */
     public $warning_loglevel = LogLevel::NOTICE;
