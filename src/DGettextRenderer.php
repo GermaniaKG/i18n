@@ -13,6 +13,11 @@ class DGettextRenderer {
      */
     public $domain;
 
+    /**
+     * @var callable
+     */
+    public $dgettext;
+
 
     /**
      * @param string $domain gettext domain

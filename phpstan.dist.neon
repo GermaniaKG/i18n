@@ -1,0 +1,17 @@
+# phpstan.dist.neon
+
+# Default config file for use in repo.
+# Create a custom phpstan.neon to override settings
+
+parameters:
+    level: 2
+    paths:
+        - src
+
+    excludePaths:
+        - _schrott
+
+    ignoreErrors:
+
+        - message: '#Call to an undefined method Negotiation\\AcceptHeader::getType#'
+          path: src/ServiceProvider.php
