@@ -15,7 +15,6 @@ class ServiceProvider implements ServiceProviderInterface
 
     /**
      * @param PimpleContainer $dic Pimple Instance
-     * @implements ServiceProviderInterface
      */
     public function register(PimpleContainer $dic)
     {

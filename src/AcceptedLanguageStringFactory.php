@@ -39,7 +39,7 @@ class AcceptedLanguageStringFactory
     }
 
     /**
-     * @param  string|sting[] $header_value Header values
+     * @param  string|string[] $header_value Header values
      * @return string
      */
     public function __invoke( $header_value )
